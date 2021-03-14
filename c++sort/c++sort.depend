@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1615648522 source:g:\ioana scoala\facultate\sd\tema 1\c++sort\main.cpp
+	<iostream>
+	<algorithm>
+	<chrono>
+	<random>
+	<vector>
+	<functional>
+

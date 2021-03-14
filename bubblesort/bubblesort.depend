@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1615724329 source:g:\ioana scoala\facultate\sd\tema 1\bubblesort\main.cpp
+	<iostream>
+	<chrono>
+	<random>
+	<algorithm>
+	<vector>
+	<functional>
+

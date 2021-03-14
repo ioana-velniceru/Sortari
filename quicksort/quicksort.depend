@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1615736408 source:g:\ioana scoala\facultate\sd\tema 1\quicksort\main.cpp
+	<iostream>
+	<chrono>
+	<random>
+	<algorithm>
+	<vector>
+	<functional>
+
