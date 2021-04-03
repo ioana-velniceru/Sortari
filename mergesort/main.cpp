@@ -8,53 +8,49 @@
 using namespace std;
 using namespace std::chrono;
 
-void interclasare(vector<int> &v, int inceput, int mijloc, int sfarsit){
-    int n1 = mijloc - inceput + 1, n2 = sfarsit - mijloc;
-    vector<int> v1(n1), v2(n2);
-    for (int i = 0; i < n1; i++)
-        v1[i] = v[i + inceput];
-    for (int i = 0; i < n2; i++)
-        v2[i] = v[i + mijloc + 1];
-    int i = 0, j = 0, k = inceput;
-    while (i < n1 && j < n2){
-        if (v1[i] <= v2[j]){
-            v[k] = v1[i];
-            i++;
+void interclasare(vector<int> &v, int index_inceput, int inc1, int sf1, int inc2, int sf2){
+    vector<int> merged(sf2 - inc1 + 1);
+    int k = 0;
+    while (inc1 <= sf1 && inc2 <= sf2){
+        if (v[inc1] <= v[inc2]){
+            merged[k] = v[inc1];
+            inc1++;
         } else {
-            v[k] = v2[j];
-            j++;
+            merged[k] = v[inc2];
+            inc2++;
         }
         k++;
     }
-    while (i < n1){
-        v[k] = v1[i];
+    while (inc1 <= sf1){
+        merged[k] = v[inc1];
         k++;
-        i++;
+        inc1++;
     }
-    while (j < n2){
-        v[k] = v2[j];
+    while (inc2 <= sf2){
+        merged[k] = v[inc2];
         k++;
-        j++;
+        inc2++;
+    }
+    for (int j = 0; j < k; j++){
+        v[index_inceput + j] = merged[j];
     }
 }
 
-void sortare(vector<int> &v, int inceput, int sfarsit){
-    int size_v_intercl, index_inceput;
-    for (size_v_intercl = 1; size_v_intercl <= sfarsit; size_v_intercl *= 2){
-        for (index_inceput = inceput; index_inceput < sfarsit; index_inceput += size_v_intercl * 2){
-            int mijloc, index_sfarsit;
-            if (index_inceput + size_v_intercl - 1 <= sfarsit){
-                mijloc = index_inceput + size_v_intercl - 1;
-            } else {
-                mijloc = sfarsit;
+void sortare(vector<int> &v, int n){
+    int size_v_intercl = 1;
+    while (size_v_intercl < n){
+        int i = 0;
+        while (i < n){
+            int inc1 = i, sf1 = i + size_v_intercl - 1, inc2 = i + size_v_intercl, sf2 = i + 2 * size_v_intercl - 1;
+            if (inc2 < n){
+                if (sf2 >= n) {
+                    sf2 = n - 1;
+                }
+                interclasare(v, i, inc1, sf1, inc2, sf2);
             }
-            if (index_inceput + size_v_intercl * 2 - 1 <= sfarsit){
-                index_sfarsit = index_inceput + size_v_intercl * 2 - 1;
-            } else {
-                index_sfarsit = sfarsit;
-            }
-            interclasare(v, index_inceput, mijloc, index_sfarsit);
+            i += 2 * size_v_intercl;
         }
+        size_v_intercl *= 2;
     }
 }
 
@@ -71,21 +67,16 @@ int main()
         vector<int> v(n);
         cout << "Max = ";
         cin >> nrmaxim;
-        if (n > 80000000){
-            cout << "Algoritmul nu poate sorta" << endl;
-        }
-        else {
-            random_device rd;
-            mt19937 gen(rd());
-            uniform_int_distribution<int> dist(0, nrmaxim);
-            auto generator = bind(dist, gen);
-            generate_n(v.begin(), n, generator);
-            auto start = high_resolution_clock::now();
-            sortare(v, 0, n - 1);
-            auto stop = high_resolution_clock::now();
-            auto duration = duration_cast<microseconds>(stop - start);
-            cout << "Timpul de executare: " << duration.count() << " microsecunde" << endl;
-        }
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<int> dist(0, nrmaxim);
+        auto generator = bind(dist, gen);
+        generate_n(v.begin(), n, generator);
+        auto start = high_resolution_clock::now();
+        sortare(v, n);
+        auto stop = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(stop - start);
+        cout << "Timpul de executare: " << duration.count() << " microsecunde" << endl;
     }
     return 0;
 }
